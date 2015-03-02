@@ -10,6 +10,7 @@ Installation
 
 ```shell
 git clone git@github.com:TonyEight/telemetry-parser.git
+cd telemetry-parser/
 virtualenv .
 source bin/activate
 pip install -r requirements.txt
@@ -19,11 +20,12 @@ Run
 ---
 
 First, retrieve the zipped logs and put the zip file in the raw_logs directory.
-Rename it : raw_logs.zip
+Then rename it : raw_logs.zip
 
 Then run the following commands :
 
 ```shell
+cd telemetry-parser/
 source bin/activate
 python tl-parser.py
 ```
