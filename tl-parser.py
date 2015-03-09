@@ -106,13 +106,13 @@ def parse_logs():
         for trace in data['TelemetryDataLights']:
             # csv row buffer
             row = []
+            timestamp = None
             # retrieve each info from the dictionnary created by the 
             # line loading starting with UTC time
             # here, we transform "UtcTime" field, which is a datetime string
             # in ISO format, to a python datetime object
-            row.append(
-                dateutil.parser.parse(trace['UtcTime']
-            ).strftime("%d-%m-%Y %H:%M:%S"))
+            timestamp = dateutil.parser.parse(trace['UtcTime'])
+            row.append(timestamp.strftime("%d-%m-%Y %H:%M:%S"))
             row.append(data['TelemetryDataAppInfo']['AppName'])
             row.append(data['TelemetryDataAppInfo']['AppVersion'])
             row.append(data['TelemetryDataAppInfo']['Ip'])
@@ -128,7 +128,7 @@ def parse_logs():
             if data['TelemetryDataAppInfo']['LocalId'] not in users:
                 users.append(data['TelemetryDataAppInfo']['LocalId'])
             traces_count += 1
-            rows.append(row)
+            rows.append((timestamp, row))
     # log file closing
     merged_log.close()
 
@@ -142,7 +142,8 @@ def parse_logs():
     # reorders each trace based on "UtcTime" field
     rows = sorted(rows, key=itemgetter(0))
     # writes the CSV content
-    writer.writerows(rows)
+    for row in rows:
+        writer.writerow(row[1])
     # adds a separator line
     writer.writerow(['',''])
     # adds metrics to the CSV file
